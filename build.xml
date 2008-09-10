@@ -1,0 +1,21 @@
+<project name="cdk-eclipse" default="export">
+
+	<property name="build" value="build"/>
+	<property name="srcmain" value="src/main"/>
+	
+	<target name="export" depends="build">
+		<java classname="net.sf.cdk.tools.eclipse.EclipseProjectCreator">
+			<classpath>
+				<pathelement path="${build}"/>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="build">
+		<mkdir dir="${build}"/>
+		<javac destdir="${build}" srcdir="${srcmain}">
+			<include name="net/sf/cdk/tools/**/*"/>
+	    </javac>
+	</target>
+
+</project>
