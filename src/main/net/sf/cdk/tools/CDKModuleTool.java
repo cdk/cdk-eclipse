@@ -31,10 +31,11 @@ import java.util.List;
 
 public class CDKModuleTool {
 
-    public static List<String> findModules() {
+    public static List<String> findModules(String root) {
         // construct a list of modules, assuming runDoclet has been run
         List<String> modules = new ArrayList<String>();
-        File dir = new File("build");
+        File dir = new File(root + File.separator + "build");
+        System.out.println("Root folder: " + dir.getPath());
         File[] files = dir.listFiles(
             new FileFilter() {
                 public boolean accept(File file) {

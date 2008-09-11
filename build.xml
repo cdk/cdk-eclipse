@@ -13,9 +13,13 @@
 	
 	<target name="build">
 		<mkdir dir="${build}"/>
-		<javac destdir="${build}" srcdir="${srcmain}">
+		<javac destdir="${build}" srcdir="${srcmain}" debug="yes">
 			<include name="net/sf/cdk/tools/**/*"/>
 	    </javac>
 	</target>
 
+	<target name="clean">
+		<delete dir="${build}"/>
+	</target>
+	
 </project>

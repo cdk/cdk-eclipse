@@ -1,0 +1,5 @@
+Project to create Eclipse projects for CDK modules.
+
+Run:
+
+$ ant export

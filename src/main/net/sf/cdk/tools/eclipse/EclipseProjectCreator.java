@@ -30,28 +30,46 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import net.sf.cdk.tools.CDKModuleTool;
 
 public class EclipseProjectCreator {
 
+    private final String ROOTARG = "--root=";
+    private final String TAGARG = "--tag=";
+    
     private String outputPath = "build/eclipse/trunk/";
     private String version = "1.1.0.20080907";
 
     private List<String> modules = new ArrayList<String>();
+    
+    private String root;
+    private String tag;
 
     private EclipseProjectCreator() {
+        root = "../../cdk/branches";
+        tag = "1.2.0";
     }
 
     private void findModules() {
-        modules = CDKModuleTool.findModules();
+        modules = CDKModuleTool.findModules(root + File.separator + tag);
         System.out.println("Number of modules found: " + modules.size());
     }
 
     public static void main(String[] args) throws IOException {
         EclipseProjectCreator checker = new EclipseProjectCreator();
+        checker.processArguments(args);
         checker.findModules();
         checker.createEclipseProjects();
+    }
+
+    private void processArguments( String[] args ) {
+        for (String arg : args) {
+            if (arg.startsWith(ROOTARG)) {
+                root = arg.substring(ROOTARG.length());
+            }
+        }
     }
 
     private void createEclipseProjects() throws IOException {
@@ -119,12 +137,13 @@ public class EclipseProjectCreator {
     }
 
     private File createProjectFolder(String projectName) {
+        
         File projectDir = new File(outputPath + projectName);
-        projectDir.mkdir();
+        projectDir.mkdirs();
         File metainfDir = new File(projectDir.getPath() + "/META-INF");
-        metainfDir.mkdir();
+        metainfDir.mkdirs();
         File jarDir = new File(projectDir.getPath() + "/jar");
-        jarDir.mkdir();
+        jarDir.mkdirs();
         return projectDir;
     }
 
