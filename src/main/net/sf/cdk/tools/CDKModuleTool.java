@@ -31,9 +31,9 @@ import java.util.List;
 
 public class CDKModuleTool {
 
-    public static List<String> findModules(String root) {
+    public static List<CDKModule> findModules(String root) {
         // construct a list of modules, assuming runDoclet has been run
-        List<String> modules = new ArrayList<String>();
+        List<CDKModule> modules = new ArrayList<CDKModule>();
         File dir = new File(root + File.separator + "build");
         System.out.println("Root folder: " + dir.getPath());
         File[] files = dir.listFiles(
@@ -47,7 +47,12 @@ public class CDKModuleTool {
             String name = files[i].getName();
             if (!name.startsWith("test")) {
                 String module = name.substring(0, name.indexOf('.'));
-                modules.add(module);
+                try {
+                    modules.add(CDKModule.getInstance(module, root));
+                } catch ( Exception e ) {
+                    System.out.println("Problem loading info for module: " + module);
+                    e.printStackTrace();
+                }
             }
         }
         return modules;

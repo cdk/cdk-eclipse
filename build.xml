@@ -1,13 +1,19 @@
 <project name="cdk-eclipse" default="export">
 
 	<property name="build" value="build"/>
+	<property name="exports" value="exports"/>
 	<property name="srcmain" value="src/main"/>
+
+	<property name="tag" value="trunk"/>
+	<property name="root" value="../../cdk"/>
 	
 	<target name="export" depends="build">
 		<java classname="net.sf.cdk.tools.eclipse.EclipseProjectCreator">
 			<classpath>
 				<pathelement path="${build}"/>
 			</classpath>
+			<arg value="--tag=${tag}"/>
+			<arg value="--root=${root}"/>
 		</java>
 	</target>
 	
@@ -20,6 +26,7 @@
 
 	<target name="clean">
 		<delete dir="${build}"/>
+		<delete dir="${exports}"/>
 	</target>
 	
 </project>
