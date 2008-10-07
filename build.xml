@@ -1,5 +1,7 @@
 <project name="cdk-eclipse" default="export">
 
+        <property file="ant.properties"/>
+
 	<property name="build" value="build"/>
 	<property name="exports" value="exports"/>
 	<property name="srcmain" value="src/main"/>
