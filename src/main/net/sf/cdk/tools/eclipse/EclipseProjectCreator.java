@@ -71,11 +71,11 @@ public class EclipseProjectCreator {
 
     private EclipseProjectCreator() {
         root = "../../cdk";
-        tag = "tags/1.2.0";
+        tag = null;
     }
 
     private void findModules() {
-        modules = CDKModuleTool.findModules(root + File.separator + tag);
+        modules = CDKModuleTool.findModules(root + (tag == null ? "" : (File.separator + tag)));
         System.out.println("Number of modules found: " + modules.size());
     }
 
@@ -90,8 +90,10 @@ public class EclipseProjectCreator {
         for (String arg : args) {
             if (arg.startsWith(ROOTARG)) {
                 root = arg.substring(ROOTARG.length());
+                System.out.println("Set root to: " + root);
             } else if (arg.startsWith(TAGARG)) {
                 tag = arg.substring(TAGARG.length());
+                System.out.println("Set tag to: " + tag);
             }
         }
     }
@@ -116,7 +118,7 @@ public class EclipseProjectCreator {
     private void copyCDKJar(CDKModule module, File projectFolder) {
         File input = new File(
             root + 
-            File.separator + tag +
+            (tag == null ? "" : (File.separator + tag)) +
             File.separator + "dist" +
             File.separator + "jar" +
             File.separator + "cdk-" + module.getName() + ".jar"

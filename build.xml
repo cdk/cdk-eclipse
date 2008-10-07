@@ -6,7 +6,7 @@
 	<property name="exports" value="exports"/>
 	<property name="srcmain" value="src/main"/>
 
-	<property name="tag" value="trunk"/>
+	<property name="tag" value=""/>
 	<property name="root" value="../../cdk"/>
 	
 	<target name="export" depends="build">
