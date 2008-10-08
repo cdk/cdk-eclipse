@@ -42,21 +42,24 @@ import net.sf.cdk.tools.CDKModuleTool;
 
 public class EclipseProjectCreator {
 
-    private static Map<String, String> jarToProjectMap;
+    private static Map<String, String> jarToPluginMap;
+    private static Map<String, String> jarToImportMap;    
     
     static {
-        jarToProjectMap = new HashMap<String, String>();
-        jarToProjectMap.put("vecmath1.2-1.14.jar", "javax.vecmath");
-        jarToProjectMap.put("jama-1.0.2.jar", "org.jama");
-        jarToProjectMap.put("xom-1.1.jar", "net.bioclipse.xom");
-        jarToProjectMap.put("jumbo-5.4.2-b2.jar", "net.bioclipse.cml");
-        jarToProjectMap.put("jumbo-with-fix-by-jonalv.jar", "net.bioclipse.cml");
-        jarToProjectMap.put("log4j.jar", "org.apache.log4j");
-        jarToProjectMap.put("jgrapht-0.6.0.jar", "org.3pq.jgrapht");
-        jarToProjectMap.put("xpp3-1.1.4c.jar", "org.xmlpull.xpp3");
-        jarToProjectMap.put("sjava-0.68.jar", "org.omegahat.sjava");
-        jarToProjectMap.put("JRI.jar", "org.rosuda.jri");
-        jarToProjectMap.put("jniinchi-0.4.jar", "net.sf.jniinchi");
+        jarToPluginMap = new HashMap<String, String>();
+        jarToPluginMap.put("vecmath1.2-1.14.jar", "javax.vecmath");
+        jarToPluginMap.put("jama-1.0.2.jar", "org.jama");
+        jarToPluginMap.put("xom-1.1.jar", "net.bioclipse.xom");
+        jarToPluginMap.put("jumbo-5.4.2-b2.jar", "net.bioclipse.cml");
+        jarToPluginMap.put("jumbo-with-fix-by-jonalv.jar", "net.bioclipse.cml");
+        jarToPluginMap.put("jgrapht-0.6.0.jar", "org.3pq.jgrapht");
+        jarToPluginMap.put("xpp3-1.1.4c.jar", "org.xmlpull.xpp3");
+        jarToPluginMap.put("sjava-0.68.jar", "org.omegahat.sjava");
+        jarToPluginMap.put("JRI.jar", "org.rosuda.jri");
+        jarToPluginMap.put("jniinchi-0.4.jar", "net.sf.jniinchi");
+        
+        jarToImportMap = new HashMap<String, String>();
+        jarToImportMap.put("log4j.jar", "org.apache.log4j");
     }
     
     private final String ROOTARG = "--root=";
@@ -220,28 +223,50 @@ public class EclipseProjectCreator {
 
         Iterator<String> cdkDeps = module.getCDKDependencies().iterator();
         Iterator<String> otherDeps = module.getDependencies().iterator();
+        // print the Required-Bundle section
+        int requirementsPrinted = 0;
         if (cdkDeps.hasNext() || otherDeps.hasNext()) {
-            writer.print("Require-Bundle:");
             while (cdkDeps.hasNext()) {
-                writer.print(" org.openscience.cdk." + cdkDeps.next());
-                if (cdkDeps.hasNext() || otherDeps.hasNext()) {
-                    writer.print(',');
+                if (requirementsPrinted == 0) {
+                    writer.print("Require-Bundle:");
+                } else if (requirementsPrinted > 0) {
+                    writer.println(',');
                 }
-                writer.println();
+                writer.print(" org.openscience.cdk." + cdkDeps.next());
+                requirementsPrinted++;
             }
             while (otherDeps.hasNext()) {
                 String jar = otherDeps.next();
-                if (!jarToProjectMap.containsKey(jar)) {
-                    System.out.println("Don't know which Eclipse project this jar maps to: " + jar);
-                } else {
-                    writer.print(" " + jarToProjectMap.get(jar));
-                    if (otherDeps.hasNext()) {
-                        writer.print(',');
+                if (jarToPluginMap.containsKey(jar)) {
+                    if (requirementsPrinted == 0) {
+                        writer.print("Require-Bundle:");
+                    } else if (requirementsPrinted > 0) {
+                        writer.println(',');
                     }
-                    writer.println();
+                    writer.print(" " + jarToPluginMap.get(jar));
+                    requirementsPrinted++;
+                } else if (!jarToImportMap.containsKey(jar)) {
+                    System.out.println("Don't know which Eclipse project this jar maps to: " + jar);
                 }
             }
         }
+        if (requirementsPrinted > 0) writer.println();
+        // print the Import-Package section
+        int importsPrinted = 0;
+        otherDeps = module.getDependencies().iterator();
+        while (otherDeps.hasNext()) {
+            String jar = otherDeps.next();
+            if (jarToImportMap.containsKey(jar)) {
+                if (importsPrinted == 0) {
+                    writer.print("Import-Package:");
+                } else if (importsPrinted > 0) {
+                    writer.println(',');
+                }
+                writer.print(" " + jarToImportMap.get(jar));
+                importsPrinted++;
+            }
+        }
+        if (importsPrinted > 0) writer.println();
 
         Iterator<String> pkgs = module.getPackages().iterator();
         if (pkgs.hasNext()) {
