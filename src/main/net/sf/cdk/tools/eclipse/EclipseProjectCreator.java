@@ -61,14 +61,14 @@ public class EclipseProjectCreator {
     private final String ROOTARG = "--root=";
     private final String TAGARG = "--tag=";
     
-    private String outputPath = "exports" + File.separator + "trunk" + File.separator;
+    private String root;
+    private String tag;
+
+    private String outputPath = "exports" + File.separator + (tag == null ? "" : (tag + File.separator));
     private String version = "1.1.0.20080907";
 
     private List<CDKModule> modules = new ArrayList<CDKModule>();
     
-    private String root;
-    private String tag;
-
     private EclipseProjectCreator() {
         root = "../../cdk";
         tag = null;
