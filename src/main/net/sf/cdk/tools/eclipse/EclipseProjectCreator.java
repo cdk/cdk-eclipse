@@ -50,6 +50,7 @@ public class EclipseProjectCreator {
         jarToProjectMap.put("jama-1.0.2.jar", "org.jama");
         jarToProjectMap.put("xom-1.1.jar", "net.bioclipse.xom");
         jarToProjectMap.put("jumbo-5.4.2-b2.jar", "net.bioclipse.cml");
+        jarToProjectMap.put("jumbo-with-fix-by-jonalv.jar", "net.bioclipse.cml");
         jarToProjectMap.put("log4j.jar", "org.apache.log4j");
         jarToProjectMap.put("jgrapht-0.6.0.jar", "org.3pq.jgrapht");
         jarToProjectMap.put("xpp3-1.1.4c.jar", "org.xmlpull.xpp3");
