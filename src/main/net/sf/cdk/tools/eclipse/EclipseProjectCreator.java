@@ -25,6 +25,7 @@
 package net.sf.cdk.tools.eclipse;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -114,14 +115,46 @@ public class EclipseProjectCreator {
                 createDotClasspathFile(projectName, module, projectFolder);
                 createManifestFile(projectName, module, projectFolder);
                 createBuildProperties(projectName, module, projectFolder);
-                copyCDKJar(module, projectFolder);
+                copyJavaFiles(module, projectFolder);
+                extractNonClassFilesFromJar(module, projectFolder);
             } else {
                 System.out.println("Creation of folder failed...");
             }
         }
     }
 
-    private void copyCDKJar(CDKModule module, File projectFolder) {
+    private void copyJavaFiles(CDKModule module, File projectFolder) {
+        for (String file : module.getJavaFiles()) {
+            File input = new File(
+                root +
+                (tag == null ? "" : (File.separator + tag)) +
+                File.separator + "src" +
+                File.separator + "main" +
+                File.separator + file
+            );
+            File output = new File(
+                projectFolder.getPath() + 
+                File.separator + "src" + 
+                File.separator + file
+            );
+            try {
+                String pkg = file.substring(0,file.lastIndexOf('/'));
+                File dir = new File(
+                    projectFolder.getPath() +
+                    File.separator + "src" + 
+                    File.separator + pkg
+                );
+                dir.mkdirs();
+                copyFile(input, output);
+            } catch ( Exception e ) {
+                System.out.println("Could not copy source file: " + file);
+                e.printStackTrace();
+            }
+        }
+        
+    }
+
+    private void extractNonClassFilesFromJar(CDKModule module, File projectFolder) {
         File input = new File(
             root + 
             (tag == null ? "" : (File.separator + tag)) +
@@ -137,15 +170,22 @@ public class EclipseProjectCreator {
                     ZipEntry entry = entries.nextElement();
                     String entryName = entry.getName();
                     if (!entryName.startsWith("META-INF")) {
-                        if (entry.isDirectory()) {
-                            File dir = new File(
-                                projectFolder.getPath() + 
-                                File.separator + entryName
-                            );
-                            dir.mkdirs();
+                        if (entry.isDirectory() ||
+                            entryName.endsWith(".class")) {
                         } else {
+                            if (!entryName.endsWith(".set") &&
+                                !entryName.endsWith(".javafiles")) {
+                                String pkg = entryName.substring(0,entryName.lastIndexOf('/'));
+                                File dir = new File(
+                                    projectFolder.getPath() +
+                                    File.separator + "src" + 
+                                    File.separator + pkg
+                                );
+                                dir.mkdirs();
+                            }
                             File output = new File(
                                 projectFolder.getPath() + 
+                                File.separator + "src" + 
                                 File.separator + entryName
                             );
                             copyFile(zipFile.getInputStream(entry), output);
@@ -166,6 +206,10 @@ public class EclipseProjectCreator {
         input.read(bytes);
         oStream.write(bytes);         
         oStream.close();
+    }
+
+    private void copyFile(File input, File output) throws Exception {
+        copyFile(new FileInputStream(input), output);
     }
 
     private void createDotProjectFile(String projectName, File projectFolder) throws IOException {
@@ -203,7 +247,7 @@ public class EclipseProjectCreator {
         writer.println("<classpath>");
         writer.println("  <classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER\"/>");
         writer.println("  <classpathentry kind=\"con\" path=\"org.eclipse.pde.core.requiredPlugins\"/>");
-        writer.println("  <classpathentry exported=\"true\" kind=\"lib\" path=\"jar/cdk-" + module.getName() + ".jar\"/>");
+        writer.println("  <classpathentry kind=\"src\" path=\"src\"/>");
         writer.println("  <classpathentry kind=\"output\" path=\"bin\"/>");
         writer.println("</classpath>");
         writer.close();
@@ -212,8 +256,9 @@ public class EclipseProjectCreator {
     private void createBuildProperties(String projectName, CDKModule module, File projectFolder) throws IOException {
         File buildPropertiesFile = new File(projectFolder.getPath()+ "/build.properties");
         PrintWriter writer = new PrintWriter(new FileWriter(buildPropertiesFile));
-        writer.println("bin.includes = .,\\");
-        writer.println("               META-INF/,\\");
+        writer.println("source.. = src");
+        writer.println("bin.includes = META-INF/,\\");
+        writer.println("               bin");
         writer.close();
     }
     
@@ -227,7 +272,6 @@ public class EclipseProjectCreator {
         writer.println("Bundle-Version: " + version + "");
         writer.println("Bundle-Vendor: The Chemistry Development Kit Project");
         writer.println("Bundle-ActivationPolicy: lazy");
-        writer.println("Bundle-Classpath: jar/cdk-" + module.getName() + ".jar");
         writer.println("Bundle-RequiredExecutionEnvironment: J2SE-1.5");
 
         Iterator<String> cdkDeps = module.getCDKDependencies().iterator();
@@ -297,8 +341,6 @@ public class EclipseProjectCreator {
         projectDir.mkdirs();
         File metainfDir = new File(projectDir.getPath() + "/META-INF");
         metainfDir.mkdirs();
-        File jarDir = new File(projectDir.getPath() + "/jar");
-        jarDir.mkdirs();
         return projectDir;
     }
 
