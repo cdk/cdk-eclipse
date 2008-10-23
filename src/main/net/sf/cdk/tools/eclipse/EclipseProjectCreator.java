@@ -144,8 +144,6 @@ public class EclipseProjectCreator {
                             );
                             dir.mkdirs();
                         } else {
-                            //                        String pkg = entryName.substring(0,entryName.lastIndexOf('/'));
-                            //                        String file = entryName.substring(entryName.lastIndexOf('/')+1);
                             File output = new File(
                                 projectFolder.getPath() + 
                                 File.separator + entryName
@@ -214,15 +212,8 @@ public class EclipseProjectCreator {
     private void createBuildProperties(String projectName, CDKModule module, File projectFolder) throws IOException {
         File buildPropertiesFile = new File(projectFolder.getPath()+ "/build.properties");
         PrintWriter writer = new PrintWriter(new FileWriter(buildPropertiesFile));
-        writer.println("bin.includes = META-INF/,\\");
-        Iterator<String> otherDeps = module.getDependencies().iterator();
-        while (otherDeps.hasNext()) {
-            writer.print("               jar/" + otherDeps.next());
-            if (otherDeps.hasNext()) {
-                writer.print(",\\");
-            }
-            writer.println();
-        }            		
+        writer.println("bin.includes = .,\\");
+        writer.println("               META-INF/,\\");
         writer.close();
     }
     
