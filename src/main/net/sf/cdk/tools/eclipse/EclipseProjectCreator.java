@@ -25,17 +25,19 @@
 package net.sf.cdk.tools.eclipse;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import net.sf.cdk.tools.CDKModule;
 import net.sf.cdk.tools.CDKModuleTool;
@@ -128,13 +130,30 @@ public class EclipseProjectCreator {
             File.separator + "cdk-" + module.getName() + ".jar"
         );
         if (input.exists() && input.canRead()) {
-            File output = new File(
-                                   projectFolder.getPath() + 
-                                   File.separator + "jar"+ 
-                                   File.separator + "cdk-" + module.getName() + ".jar"
-            );
             try {
-                copyFile(input, output);
+                ZipFile zipFile = new ZipFile(input);
+                Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = entries.nextElement();
+                    String entryName = entry.getName();
+                    if (!entryName.startsWith("META-INF")) {
+                        if (entry.isDirectory()) {
+                            File dir = new File(
+                                projectFolder.getPath() + 
+                                File.separator + entryName
+                            );
+                            dir.mkdirs();
+                        } else {
+                            //                        String pkg = entryName.substring(0,entryName.lastIndexOf('/'));
+                            //                        String file = entryName.substring(entryName.lastIndexOf('/')+1);
+                            File output = new File(
+                                projectFolder.getPath() + 
+                                File.separator + entryName
+                            );
+                            copyFile(zipFile.getInputStream(entry), output);
+                        }
+                    }
+                }
             } catch ( Exception e ) {
                 System.out.println("Could not copy module jar: " + module.getName());
                 e.printStackTrace();
@@ -142,13 +161,12 @@ public class EclipseProjectCreator {
         }
     }
 
-    private void copyFile(File input, File output) throws Exception {
-        FileInputStream iStream = new FileInputStream(input);
+    private void copyFile(InputStream input, File output) throws Exception {
         FileOutputStream oStream = new FileOutputStream(output);
-        FileChannel iChannel = iStream.getChannel();
-        FileChannel oChannel = oStream.getChannel();
-        iChannel.transferTo(0, iChannel.size(), oChannel);
-        iStream.close();
+        int length = input.available(); // danger!
+        byte[] bytes = new byte[length];
+        input.read(bytes);
+        oStream.write(bytes);         
         oStream.close();
     }
 
