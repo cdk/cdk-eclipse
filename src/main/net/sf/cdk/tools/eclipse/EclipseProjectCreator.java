@@ -72,7 +72,7 @@ public class EclipseProjectCreator {
     private String tag;
 
     private String outputPath = "exports" + File.separator + (tag == null ? "" : (tag + File.separator));
-    private String version = "1.1.0.20080907";
+    private String version = "1.1.0.20081023";
 
     private List<CDKModule> modules = new ArrayList<CDKModule>();
     
