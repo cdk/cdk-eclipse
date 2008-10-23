@@ -42,6 +42,7 @@ public class CDKModule {
     private List<String> cdkDependencies;
     private List<String> dependencies;
     private List<String> packages;
+    private List<String> pluginFiles;
     
     private CDKModule(String name, String root) throws Exception {
         this.name = name;
@@ -49,6 +50,7 @@ public class CDKModule {
         this.cdkDependencies = new ArrayList<String>();
         this.dependencies = new ArrayList<String>();
         this.packages = new ArrayList<String>();
+        this.pluginFiles = new ArrayList<String>();
         loadInfo();
     }
     
@@ -105,6 +107,7 @@ public class CDKModule {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
         while (line != null) {
+            addPluginFile(line.trim());
             String pkg = line.substring(0,line.lastIndexOf('/'));
             pkg = pkg.replaceAll("\\/", ".");
             if (!hasPackage(pkg)) addPackage(pkg);
@@ -148,10 +151,21 @@ public class CDKModule {
         return packages;
     }
     
+    /**
+     * Returns a {@link List} of package names this module depends on.
+     */
+    public List<String> getPluginFiles() {
+        return pluginFiles;
+    }
+
     private void addPackage(String packageName) {
         this.packages.add( packageName );
     }
     
+    private void addPluginFile(String file) {
+        this.pluginFiles.add(file);
+    }
+
     private boolean hasPackage(String packageName) {
         return getPackages().contains( packageName);
     }
