@@ -115,6 +115,7 @@ public class EclipseProjectCreator {
                 createDotClasspathFile(projectName, module, projectFolder);
                 createManifestFile(projectName, module, projectFolder);
                 createBuildProperties(projectName, module, projectFolder);
+                createActivator(projectName, module, projectFolder);
                 copyJavaFiles(module, projectFolder);
                 extractNonClassFilesFromJar(module, projectFolder);
             } else {
@@ -253,6 +254,26 @@ public class EclipseProjectCreator {
         writer.close();
     }
     
+    private void createActivator(String projectName, CDKModule module, File projectFolder) throws IOException {
+        String pkg = projectName.replace('.', File.separatorChar);
+        File dir = new File(
+            projectFolder.getPath() +
+            File.separator + "src" +
+            File.separator + pkg
+        );
+        dir.mkdirs();
+        File dotProjectFile = new File(
+            dir.getPath() + File.separator + "Activator.java"
+        );
+        PrintWriter writer = new PrintWriter(new FileWriter(dotProjectFile));
+        writer.println("package " + projectName + ";");
+        writer.println("");
+        writer.println("import org.eclipse.core.runtime.Plugin;");
+        writer.println("");
+        writer.println("public class Activator extends Plugin {}");
+        writer.close();
+    }
+
     private void createBuildProperties(String projectName, CDKModule module, File projectFolder) throws IOException {
         File buildPropertiesFile = new File(projectFolder.getPath()+ "/build.properties");
         PrintWriter writer = new PrintWriter(new FileWriter(buildPropertiesFile));
@@ -273,6 +294,7 @@ public class EclipseProjectCreator {
         writer.println("Bundle-Vendor: The Chemistry Development Kit Project");
         writer.println("Bundle-ActivationPolicy: lazy");
         writer.println("Bundle-RequiredExecutionEnvironment: J2SE-1.5");
+        writer.println("Bundle-Activator: " + projectName + ".Activator");
 
         Iterator<String> cdkDeps = module.getCDKDependencies().iterator();
         Iterator<String> otherDeps = module.getDependencies().iterator();
@@ -303,7 +325,12 @@ public class EclipseProjectCreator {
                 }
             }
         }
-        if (requirementsPrinted > 0) writer.println();
+        if (requirementsPrinted > 0) {
+            writer.println(",");
+            writer.println(" org.eclipse.core.runtime");
+        } else {
+            writer.println("Require-Bundle: org.eclipse.core.runtime");
+        }
         // print the Import-Package section
         int importsPrinted = 0;
         otherDeps = module.getDependencies().iterator();
