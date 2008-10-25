@@ -67,18 +67,20 @@ public class EclipseProjectCreator {
     
     private final String ROOTARG = "--root=";
     private final String TAGARG = "--tag=";
+    private final String VERSIONARG = "--version=";
     
     private String root;
     private String tag;
 
     private String outputPath = "exports" + File.separator + (tag == null ? "" : (tag + File.separator));
-    private String version = "1.1.0.20081023";
+    private String version;
 
     private List<CDKModule> modules = new ArrayList<CDKModule>();
     
     private EclipseProjectCreator() {
         root = "../../cdk";
         tag = null;
+        version = "unknown";
     }
 
     private void findModules() {
@@ -101,6 +103,9 @@ public class EclipseProjectCreator {
             } else if (arg.startsWith(TAGARG)) {
                 tag = arg.substring(TAGARG.length());
                 System.out.println("Set tag to: " + tag);
+            } else if (arg.startsWith(VERSIONARG)) {
+                version = arg.substring(VERSIONARG.length());
+                System.out.println("Set version to: " + version);
             }
         }
     }
