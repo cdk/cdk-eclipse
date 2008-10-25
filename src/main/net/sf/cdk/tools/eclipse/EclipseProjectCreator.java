@@ -202,10 +202,11 @@ public class EclipseProjectCreator {
 
     private void copyFile(InputStream input, File output) throws Exception {
         FileOutputStream oStream = new FileOutputStream(output);
-        int length = input.available(); // danger!
-        byte[] bytes = new byte[length];
-        input.read(bytes);
-        oStream.write(bytes);         
+        byte buffer[] = new byte[8192];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer)) != -1) {
+          oStream.write(buffer, 0, bytesRead);
+        }
         oStream.close();
     }
 
