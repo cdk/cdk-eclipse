@@ -300,6 +300,7 @@ public class EclipseProjectCreator {
         writer.println("Bundle-Vendor: The Chemistry Development Kit Project");
         writer.println("Bundle-ActivationPolicy: lazy");
         writer.println("Bundle-Activator: " + projectName + ".Activator");
+        writer.println("Bundle-ClassPath: .");
 
         Iterator<String> cdkDeps = module.getCDKDependencies().iterator();
         Iterator<String> otherDeps = module.getDependencies().iterator();
