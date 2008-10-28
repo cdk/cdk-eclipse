@@ -299,7 +299,6 @@ public class EclipseProjectCreator {
         writer.println("Bundle-Version: " + version + "");
         writer.println("Bundle-Vendor: The Chemistry Development Kit Project");
         writer.println("Bundle-ActivationPolicy: lazy");
-        writer.println("Bundle-RequiredExecutionEnvironment: J2SE-1.5");
         writer.println("Bundle-Activator: " + projectName + ".Activator");
 
         Iterator<String> cdkDeps = module.getCDKDependencies().iterator();
