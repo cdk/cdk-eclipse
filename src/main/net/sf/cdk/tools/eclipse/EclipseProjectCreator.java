@@ -285,7 +285,8 @@ public class EclipseProjectCreator {
         PrintWriter writer = new PrintWriter(new FileWriter(buildPropertiesFile));
         writer.println("source.. = src");
         writer.println("bin.includes = META-INF/,\\");
-        writer.println("               bin");
+        writer.println("               bin/,\\");
+        writer.println("               .");
         writer.close();
     }
     
