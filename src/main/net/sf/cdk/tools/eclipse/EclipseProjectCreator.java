@@ -53,8 +53,7 @@ public class EclipseProjectCreator {
         jarToPluginMap.put("vecmath1.2-1.14.jar", "javax.vecmath");
         jarToPluginMap.put("jama-1.0.2.jar", "org.jama");
         jarToPluginMap.put("xom-1.1.jar", "net.bioclipse.xom");
-        jarToPluginMap.put("jumbo-5.4.2-b2.jar", "net.bioclipse.cml");
-        jarToPluginMap.put("jumbo-with-fix-by-jonalv.jar", "net.bioclipse.cml");
+        jarToPluginMap.put("cmlxom-2.5-b1.jar", "org.xmlcml.cmlxom");
         jarToPluginMap.put("jgrapht-0.6.0.jar", "org.3pq.jgrapht");
         jarToPluginMap.put("xpp3-1.1.4c.jar", "org.xmlpull.xpp3");
         jarToPluginMap.put("sjava-0.68.jar", "org.omegahat.sjava");
