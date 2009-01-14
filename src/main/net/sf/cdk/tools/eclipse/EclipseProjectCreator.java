@@ -211,6 +211,7 @@ public class EclipseProjectCreator {
         while ((bytesRead = input.read(buffer)) != -1) {
           oStream.write(buffer, 0, bytesRead);
         }
+        input.close();
         oStream.close();
     }
 
