@@ -284,8 +284,8 @@ public class EclipseProjectCreator {
         File buildPropertiesFile = new File(projectFolder.getPath()+ "/build.properties");
         PrintWriter writer = new PrintWriter(new FileWriter(buildPropertiesFile));
         writer.println("source.. = src");
+        writer.println("output.. = bin");
         writer.println("bin.includes = META-INF/,\\");
-        writer.println("               bin/,\\");
         writer.println("               .");
         writer.close();
     }
