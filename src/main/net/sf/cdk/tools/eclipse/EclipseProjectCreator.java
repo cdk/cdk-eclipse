@@ -357,16 +357,19 @@ public class EclipseProjectCreator {
         if (importsPrinted > 0) writer.println();
 
         Iterator<String> pkgs = module.getPackages().iterator();
+        boolean needsSeperatePluginPkgExport =
+            !module.getPackages().contains(projectName);
         if (pkgs.hasNext()) {
             writer.print("Export-Package:");
             while (pkgs.hasNext()) {
                 writer.print(" " + pkgs.next());
-                if (pkgs.hasNext()) {
+                if (pkgs.hasNext() || needsSeperatePluginPkgExport) {
                     writer.print(',');
                 }
                 writer.println();
             }
         }
+        if (needsSeperatePluginPkgExport) writer.println(" " + projectName);
         
         writer.close();
     }
