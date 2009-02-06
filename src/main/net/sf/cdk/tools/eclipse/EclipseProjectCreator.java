@@ -59,6 +59,7 @@ public class EclipseProjectCreator {
         jarToPluginMap.put("sjava-0.68.jar", "org.omegahat.sjava");
         jarToPluginMap.put("JRI.jar", "org.rosuda.jri");
         jarToPluginMap.put("jniinchi-0.4.jar", "net.sf.jniinchi");
+        jarToPluginMap.put("jniinchi-0.5.jar", "net.sf.jniinchi");
         
         jarToImportMap = new HashMap<String, String>();
         jarToImportMap.put("log4j.jar", "org.apache.log4j");
