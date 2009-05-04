@@ -133,6 +133,24 @@ public class CDKModule {
             }
         }
         reader.close();
+        file = new File(
+                root + File.separator + "src" +
+                File.separator + "META-INF" +
+                File.separator + name + ".datafiles");
+            if (file.exists()) {
+                reader = new BufferedReader(new FileReader(file));
+                line = reader.readLine();
+                while (line != null) {
+                    line = line.trim();
+                    if (line.length() > 0) {
+                        String pkg = line.substring(0,line.lastIndexOf('/'));
+                        pkg = pkg.replaceAll("\\/", ".");
+                        if (!hasPackage(pkg)) addPackage(pkg);
+                    }
+                    line = reader.readLine();
+                }
+            }
+            reader.close();
     }
 
     public static CDKModule getInstance(String name, String root) throws Exception {
