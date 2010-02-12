@@ -8,6 +8,7 @@
 
 	<property name="tag" value=""/>
 	<property name="version" value="unknown"/>
+	<property name="blacklist" value=""/>
 	<property name="root" value="../../cdk"/>
 	
 	<target name="export" depends="build">
@@ -18,6 +19,7 @@
 			<arg value="--tag=${tag}"/>
 			<arg value="--root=${root}"/>
 			<arg value="--version=${version}"/>
+			<arg value="--blacklist=${blacklist}"/>
 		</java>
 	</target>
 	

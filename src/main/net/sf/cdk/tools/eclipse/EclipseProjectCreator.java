@@ -1,6 +1,4 @@
-/* $Revision: 6707 $ $Author: egonw $ $Date: 2006-07-30 16:38:18 -0400 (Sun, 30 Jul 2006) $
- * 
- * Copyright (C) 2008  Egon Willighagen <egonw@users.sf.net>
+/* Copyright (C) 2008-2010  Egon Willighagen <egonw@users.sf.net>
  * 
  * Contact: cdk-devel@lists.sourceforge.net
  * 
@@ -47,7 +45,9 @@ public class EclipseProjectCreator {
 
     private static Map<String, String> jarToPluginMap;
     private static Map<String, String> jarToImportMap;    
-    
+
+    private static List<String> blacklist;
+
     static {
         jarToPluginMap = new HashMap<String, String>();
         jarToPluginMap.put("vecmath1.2-1.14.jar", "javax.vecmath");
@@ -69,6 +69,7 @@ public class EclipseProjectCreator {
     private final String ROOTARG = "--root=";
     private final String TAGARG = "--tag=";
     private final String VERSIONARG = "--version=";
+    private final String BLACKLIST = "--blacklist=";
     
     private String root;
     private String tag;
@@ -82,6 +83,7 @@ public class EclipseProjectCreator {
         root = "../../cdk";
         tag = null;
         version = "unknown";
+        blacklist = new ArrayList<String>();
     }
 
     private void findModules() {
@@ -107,12 +109,26 @@ public class EclipseProjectCreator {
             } else if (arg.startsWith(VERSIONARG)) {
                 version = arg.substring(VERSIONARG.length());
                 System.out.println("Set version to: " + version);
+            } else if (arg.startsWith(BLACKLIST)) {
+            	if (arg.length() > BLACKLIST.length()) {
+            		String [] bundles = arg.substring(BLACKLIST.length()).split(",");
+            		for (String bundle : bundles) {
+            			System.out.println("Blacklisted: " + bundle);
+            			blacklist.add(bundle);
+            		}
+            		System.out.println("Set blacklist to: " + blacklist);
+            	}
             }
         }
     }
 
     private void createEclipseProjects() throws IOException {
         for (CDKModule module : modules) {
+        	if (blacklist.contains(module.getName())) {
+                System.out.println("Ignoring " + module.getName() + "...");
+        		continue;
+        	}
+
             System.out.println("Processing " + module.getName() + "...");
             String projectName = "org.openscience.cdk." + module.getName();
             File projectFolder = createProjectFolder(projectName);
