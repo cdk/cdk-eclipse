@@ -61,6 +61,7 @@ public class EclipseProjectCreator {
         jarToPluginMap.put("jniinchi-0.4.jar", "net.sf.jniinchi");
         jarToPluginMap.put("jniinchi-0.5.jar", "net.sf.jniinchi");
         jarToPluginMap.put("weka.jar", "net.sourceforge.weka");
+        jarToPluginMap.put("swt-gtk-3.4.2.jar", "org.eclipse.swt");
         
         jarToImportMap = new HashMap<String, String>();
         jarToImportMap.put("log4j.jar", "org.apache.log4j");
