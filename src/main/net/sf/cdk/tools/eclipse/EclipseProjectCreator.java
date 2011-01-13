@@ -60,8 +60,10 @@ public class EclipseProjectCreator {
         jarToPluginMap.put("JRI.jar", "org.rosuda.jri");
         jarToPluginMap.put("jniinchi-0.4.jar", "net.sf.jniinchi");
         jarToPluginMap.put("jniinchi-0.5.jar", "net.sf.jniinchi");
+        jarToPluginMap.put("jniinchi-0.7.jar", "net.sf.jniinchi");
         jarToPluginMap.put("weka.jar", "net.sourceforge.weka");
         jarToPluginMap.put("swt-gtk-3.4.2.jar", "org.eclipse.swt");
+        jarToPluginMap.put("signatures-1.0.jar", "signatures");
         
         jarToImportMap = new HashMap<String, String>();
         jarToImportMap.put("log4j.jar", "org.apache.log4j");
@@ -198,6 +200,7 @@ public class EclipseProjectCreator {
                             entryName.endsWith(".class")) {
                         } else {
                             if (!entryName.endsWith(".set") &&
+                                !entryName.endsWith(".props") &&
                                 !entryName.endsWith(".javafiles")) {
                                 String pkg = entryName.substring(0,entryName.lastIndexOf('/'));
                                 File dir = new File(
