@@ -7,6 +7,6 @@ Bundle-Vendor: Lars Carlsson and Gilleain Torrance
 Bundle-ActivationPolicy: lazy
 Bundle-Classpath: jar/signatures-1.0.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: signatures,
- signatures.simple,
- signatures.chemistry
+Export-Package: signature,
+ signature.simple,
+ signature.chemistry
