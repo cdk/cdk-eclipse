@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JNI-InChI
 Bundle-SymbolicName: net.sf.jniinchi;singleton:=true
-Bundle-Version: 0.4
+Bundle-Version: 0.7
 Bundle-Vendor: The Chemistry Development Kit Project
 Bundle-ActivationPolicy: lazy
-Bundle-Classpath: jar/jniinchi-0.4.jar
+Bundle-ClassPath: jar/jniinchi-0.7.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: net.sf.jniinchi
