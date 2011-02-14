@@ -52,8 +52,6 @@ public class EclipseProjectCreator {
         jarToPluginMap = new HashMap<String, String>();
         jarToPluginMap.put("vecmath1.2-1.14.jar", "javax.vecmath");
         jarToPluginMap.put("jama-1.0.2.jar", "org.jama");
-        jarToPluginMap.put("xom-1.1.jar", "net.bioclipse.xom");
-        jarToPluginMap.put("cmlxom-2.5-b1.jar", "org.xmlcml.cmlxom");
         jarToPluginMap.put("jgrapht-0.6.0.jar", "org.3pq.jgrapht");
         jarToPluginMap.put("xpp3-1.1.4c.jar", "org.xmlpull.xpp3");
         jarToPluginMap.put("sjava-0.68.jar", "org.omegahat.sjava");
@@ -67,6 +65,8 @@ public class EclipseProjectCreator {
         
         jarToImportMap = new HashMap<String, String>();
         jarToImportMap.put("log4j.jar", "org.apache.log4j");
+        jarToImportMap.put("xom-1.1.jar", "nu.xom");
+        jarToImportMap.put("cmlxom-2.5-b1.jar", "org.xmlcml.cml.base,\n org.xmlcml.cml.element");
     }
     
     private final String ROOTARG = "--root=";
