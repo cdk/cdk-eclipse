@@ -10,6 +10,7 @@
 	<property name="version" value="unknown"/>
 	<property name="blacklist" value=""/>
 	<property name="root" value="../../cdk"/>
+        <property name="pkgroot" value="org.openscience.cdk"/>
 	
 	<target name="export" depends="build">
 		<java classname="net.sf.cdk.tools.eclipse.EclipseProjectCreator">
@@ -20,6 +21,7 @@
 			<arg value="--root=${root}"/>
 			<arg value="--version=${version}"/>
 			<arg value="--blacklist=${blacklist}"/>
+                        <arg value="--pkgroot=${pkgroot}"/>
 		</java>
 	</target>
 	

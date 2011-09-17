@@ -51,6 +51,7 @@ public class EclipseProjectCreator {
     static {
         jarToPluginMap = new HashMap<String, String>();
         jarToPluginMap.put("vecmath1.2-1.14.jar", "javax.vecmath");
+        jarToPluginMap.put("vecmath*.jar", "javax.vecmath");
         jarToPluginMap.put("jama-1.0.2.jar", "org.jama");
         jarToPluginMap.put("jgrapht-0.6.0.jar", "org.3pq.jgrapht");
         jarToPluginMap.put("xpp3-1.1.4c.jar", "org.xmlpull.xpp3");
@@ -66,6 +67,7 @@ public class EclipseProjectCreator {
         jarToImportMap = new HashMap<String, String>();
         jarToImportMap.put("log4j.jar", "org.apache.log4j");
         jarToImportMap.put("xom-1.1.jar", "nu.xom");
+        jarToImportMap.put("xom*.jar", "nu.xom");
         jarToImportMap.put("cmlxom-2.5-b1.jar", "org.xmlcml.cml.base,\n org.xmlcml.cml.element");
     }
     
@@ -73,9 +75,11 @@ public class EclipseProjectCreator {
     private final String TAGARG = "--tag=";
     private final String VERSIONARG = "--version=";
     private final String BLACKLIST = "--blacklist=";
+    private final String PKGROOT = "--pkgroot=";
     
     private String root;
     private String tag;
+    private String pkgroot;
 
     private String outputPath = "exports" + File.separator + (tag == null ? "" : (tag + File.separator));
     private String version;
@@ -87,6 +91,7 @@ public class EclipseProjectCreator {
         tag = null;
         version = "unknown";
         blacklist = new ArrayList<String>();
+        pkgroot = "org.openscience.cdk";
     }
 
     private void findModules() {
@@ -106,6 +111,9 @@ public class EclipseProjectCreator {
             if (arg.startsWith(ROOTARG)) {
                 root = arg.substring(ROOTARG.length());
                 System.out.println("Set root to: " + root);
+            } else if (arg.startsWith(PKGROOT)) {
+                pkgroot = arg.substring(PKGROOT.length());
+                System.out.println("Set package root to: " + pkgroot);
             } else if (arg.startsWith(TAGARG)) {
                 tag = arg.substring(TAGARG.length());
                 System.out.println("Set tag to: " + tag);
@@ -133,7 +141,7 @@ public class EclipseProjectCreator {
         	}
 
             System.out.println("Processing " + module.getName() + "...");
-            String projectName = "org.openscience.cdk." + module.getName();
+            String projectName = pkgroot + "." + module.getName();
             File projectFolder = createProjectFolder(projectName);
             if (projectFolder.exists()) {
                 createDotProjectFile(projectName, projectFolder);
